@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calculadora de Upsell - Frota 162</title>
+  <style>
+    :root{
+      --bg:#ffffff; --panel:#f7f8fa; --muted:#6b6b6b; --text:#1a1a1a; --brand:#f44336; --ok:#13c296; --warn:#ffb020; --err:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);}
+    .wrap{max-width:1100px;margin:24px auto;padding:16px}
+    header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
+    header img{height:48px}
+    h1{font-size:28px;margin:0;letter-spacing:.2px;color:var(--brand)}
+    .grid{display:grid;gap:16px}
+    @media(min-width:960px){.grid{grid-template-columns:1fr 1fr}}
+    .card{background:var(--panel);border:1px solid rgba(0,0,0,.08);border-radius:16px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.08)}
+    .card h2{font-size:18px;margin:0 0 12px;color:var(--brand)}
+    label{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:10px 0 6px}
+    input,select{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:#fff;color:#000;outline:none}
+    input:focus,select:focus{border-color:var(--brand);box-shadow:0 0 0 2px rgba(244,67,54,.3)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .btn{appearance:none;border:0;background:var(--brand);color:#fff;padding:12px 16px;border-radius:12px;font-weight:700;cursor:pointer}
+    .kpis{display:grid;gap:12px;margin-top:12px}
+    @media(min-width:960px){.kpis{grid-template-columns:repeat(3,1fr)}}
+    .kpi{padding:14px;border-radius:12px;background:#fff;border:1px solid rgba(0,0,0,.08)}
+    .kpi .label{font-size:12px;color:var(--muted);text-transform:uppercase}
+    .kpi .value{font-size:22px;font-weight:800;margin-top:4px}
+    .delta.positive{color:var(--ok)}
+    .delta.negative{color:var(--warn)}
+    .features{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;border-top:1px solid rgba(0,0,0,.1);margin-top:10px}
+    .features div{padding:10px 8px;border-bottom:1px solid rgba(0,0,0,.06)}
+    .thead{font-size:12px;color:var(--muted);text-transform:uppercase}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(0,0,0,.12);background:#fff;font-size:12px}
+    .tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    small.helper{color:var(--muted)}
+    .foot{margin-top:20px;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="Logo-Frota162-PNG-RGB.png" alt="Frota 162 Logo" />
+      <h1>Calculadora de Upsell</h1>
+    </header>
+
+    <div class="grid">
+      <!-- QUADRO 1: PLANO ATUAL -->
+      <div class="card" id="cardAtual">
+        <h2>Plano atual</h2>
+        <div class="row">
+          <div>
+            <label for="planoAtual">Plano</label>
+            <select id="planoAtual">
+              <option value="Antigo">Antigo</option>
+              <option value="E1">Enterprise 1 (E1)</option>
+              <option value="E2">Enterprise 2 (E2)</option>
+              <option value="E3">Enterprise 3 (E3)</option>
+            </select>
+          </div>
+          <div>
+            <label for="placas">Placas ativas</label>
+            <input type="number" id="placas" min="0" step="1" value="40" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="valorPlacaAtual">Valor por placa – plano atual (R$)</label>
+            <input type="number" id="valorPlacaAtual" min="0" step="0.01" />
+          </div>
+          <div>
+            <label for="indicacoes">Indicações de condutor / mês</label>
+            <input type="number" id="indicacoes" min="0" step="1" value="0" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="pagamentos">Valor processado em pagamentos / mês (R$)</label>
+            <input type="number" id="pagamentos" min="0" step="0.01" value="0" />
+          </div>
+          <div>
+            <label for="cnh">Consultas de CNH / mês</label>
+            <input type="number" id="cnh" min="0" step="1" value="0" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="cnpjs">CNPJs ANTT</label>
+            <input type="number" id="cnpjs" min="1" step="1" value="1" />
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <div class="foot">Marque necessidades de operação</div>
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="precisaCRLV">Precisa emitir CRLV?</label>
+            <select id="precisaCRLV"><option>Não</option><option>Sim</option></select>
+          </div>
+          <div>
+            <label for="precisaIPVA">Precisa IPVA/Licenciamento ou Viagens?</label>
+            <select id="precisaIPVA"><option>Não</option><option>Sim</option></select>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUADRO 2: PLANO ALVO -->
+      <div class="card" id="cardAlvo">
+        <h2>Plano alvo (migração)</h2>
+        <div class="row">
+          <div>
+            <label for="planoAlvo">Plano alvo</label>
+            <select id="planoAlvo">
+              <option value="E1">Enterprise 1 (E1)</option>
+              <option value="E2">Enterprise 2 (E2)</option>
+              <option value="E3">Enterprise 3 (E3)</option>
+            </select>
+          </div>
+          <div>
+            <label for="placasAlvo">Placas no plano alvo</label>
+            <input type="number" id="placasAlvo" min="0" step="1" value="40" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label for="valorPlacaAlvo">Valor por placa – plano alvo (R$)</label>
+            <input type="number" id="valorPlacaAlvo" min="0" step="0.01" />
+          </div>
+        </div>
+        <button class="btn" id="btnCalcular">Calcular comparação</button>
+      </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    <div class="card" style="margin-top:16px">
+      <h2>Resumo financeiro</h2>
+      <div class="kpis">
+        <div class="kpi">
+          <div class="label">Custo mensal – Plano atual</div>
+          <div class="value" id="kpiAtual">R$ 0,00</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Custo mensal – Plano alvo</div>
+          <div class="value" id="kpiAlvo">R$ 0,00</div>
+        </div>
+        <div class="kpi">
+          <div class="label">Impacto (alvo – atual)</div>
+          <div class="value delta" id="kpiDelta">R$ 0,00</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BENEFÍCIOS/FEATURES -->
+    <div class="card" style="margin-top:16px">
+      <h2>Comparação de benefícios</h2>
+      <div class="features">
+        <div class="thead">Feature</div>
+        <div class="thead">Plano atual</div>
+        <div class="thead">Plano alvo</div>
+        <div>Indicação de condutor grátis</div>
+        <div id="feat_ind_atual">—</div>
+        <div id="feat_ind_alvo">—</div>
+        <div>Taxa de pagamento 0%</div>
+        <div id="feat_pay_atual">—</div>
+        <div id="feat_pay_alvo">—</div>
+        <div>IPVA/Licenciamento</div>
+        <div id="feat_ipva_atual">—</div>
+        <div id="feat_ipva_alvo">—</div>
+        <div>Viagens</div>
+        <div id="feat_trip_atual">—</div>
+        <div id="feat_trip_alvo">—</div>
+        <div>Pagamento de multas incluso</div>
+        <div id="feat_multa_atual">—</div>
+        <div id="feat_multa_alvo">—</div>
+        <div>Consulta CNH grátis</div>
+        <div id="feat_cnh_atual">—</div>
+        <div id="feat_cnh_alvo">—</div>
+        <div>Emissão de CRLV</div>
+        <div id="feat_crlv_atual">—</div>
+        <div id="feat_crlv_alvo">—</div>
+        <div>Infrações ANTT (CNPJs)</div>
+        <div id="feat_antt_atual">—</div>
+        <div id="feat_antt_alvo">—</div>
+      </div>
+      <div class="tags" id="tagsSugestoes"></div>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT FUNCIONAL -->
+  <script>
+    const plans = {
+      Antigo: { name:'Antigo', features:{ indicacaoGratis:false, taxaPagamentoZero:false, ipvaLicenciamento:false, viagens:false, pagamentoMultas:false, cnhGratis:false, crlv:false, anttCnpjs:1 }},
+      E1: { name:'Enterprise 1', features:{ indicacaoGratis:false, taxaPagamentoZero:false, ipvaLicenciamento:false, viagens:false, pagamentoMultas:false, cnhGratis:false, crlv:false, anttCnpjs:1 }},
+      E2: { name:'Enterprise 2', features:{ indicacaoGratis:true, taxaPagamentoZero:true, ipvaLicenciamento:true, viagens:true, pagamentoMultas:true, cnhGratis:false, crlv:false, anttCnpjs:3 }},
+      E3: { name:'Enterprise 3', features:{ indicacaoGratis:true, taxaPagamentoZero:true, ipvaLicenciamento:true, viagens:true, pagamentoMultas:true, cnhGratis:true, crlv:true, anttCnpjs:5 }}
+    };
+
+    const UNIT = { indicacao:12.90, taxaPagamento:0.05, cnh:1.80 };
+    const BRL = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+    const el = id => document.getElementById(id);
+
+    function calc(planKey, placas, valorPlaca, indicacoes, pagamentos, consultasCNH){
+      const fixo = placas * Number(valorPlaca||0);
+      const f = plans[planKey].features;
+      const custoIndicacao = f.indicacaoGratis ? 0 : UNIT.indicacao * (Number(indicacoes)||0);
+      const custoPagamento = f.taxaPagamentoZero ? 0 : UNIT.taxaPagamento * (Number(pagamentos)||0);
+      const custoCNH = f.cnhGratis ? 0 : UNIT.cnh * (Number(consultasCNH)||0);
+      const total = fixo + custoIndicacao + custoPagamento + custoCNH;
+      return { total, fixo, custoIndicacao, custoPagamento, custoCNH };
+    }
+
+    function renderFeatures(atual, alvo){
+      const map = {
+        feat_ind_atual: plans[atual].features.indicacaoGratis ? '✅ Grátis' : '❌ Cobrança',
+        feat_ind_alvo:  plans[alvo].features.indicacaoGratis ? '✅ Grátis' : '❌ Cobrança',
+        feat_pay_atual: plans[atual].features.taxaPagamentoZero ? '✅ 0%' : '❌ 5%',
+        feat_pay_alvo:  plans[alvo].features.taxaPagamentoZero ? '✅ 0%' : '❌ 5%',
+        feat_ipva_atual: plans[atual].features.ipvaLicenciamento ? '✅ Incluso' : '❌ Não',
+        feat_ipva_alvo:  plans[alvo].features.ipvaLicenciamento ? '✅ Incluso' : '❌ Não',
+        feat_trip_atual: plans[atual].features.viagens ? '✅ Incluso' : '❌ Não',
+        feat_trip_alvo:  plans[alvo].features.viagens ? '✅ Incluso' : '❌ Não',
+        feat_multa_atual: plans[atual].features.pagamentoMultas ? '✅ Incluso' : '❌ Não',
+        feat_multa_alvo:  plans[alvo].features.pagamentoMultas ? '✅ Incluso' : '❌ Não',
+        feat_cnh_atual: plans[atual].features.cnhGratis ? '✅ Grátis' : '❌ R$ 1,80',
+        feat_cnh_alvo:  plans[alvo].features.cnhGratis ? '✅ Grátis' : '❌ R$ 1,80',
+        feat_crlv_atual: plans[atual].features.crlv ? '✅ Incluso' : '❌ Não',
+        feat_crlv_alvo:  plans[alvo].features.crlv ? '✅ Incluso' : '❌ Não',
+        feat_antt_atual: plans[atual].features.anttCnpjs + ' CNPJs',
+        feat_antt_alvo:  plans[alvo].features.anttCnpjs + ' CNPJs'
+      };
+      Object.entries(map).forEach(([id,val])=> el(id).textContent = val);
+
+      const tags=[];
+      if(!plans[atual].features.indicacaoGratis && plans[alvo].features.indicacaoGratis) tags.push('Economia nas indicações');
+      if(!plans[atual].features.taxaPagamentoZero && plans[alvo].features.taxaPagamentoZero) tags.push('0% taxa pagamentos');
+      if(!plans[atual].features.cnhGratis && plans[alvo].features.cnhGratis) tags.push('CNH grátis');
+      if(!plans[atual].features.crlv && plans[alvo].features.crlv) tags.push('Emissão de CRLV');
+      if(plans[alvo].features.anttCnpjs > plans[atual].features.anttCnpjs) tags.push('Mais CNPJs ANTT');
+      if(!plans[atual].features.ipvaLicenciamento && plans[alvo].features.ipvaLicenciamento) tags.push('IPVA/Licenciamento incluso');
+      if(!plans[atual].features.viagens && plans[alvo].features.viagens) tags.push('Módulo de viagens');
+
+      el('tagsSugestoes').innerHTML = tags.map(t=>`<span class="pill">${t}</span>`).join('');
+    }
+
+    document.getElementById('btnCalcular').addEventListener('click',()=>{
+      const atual = el('planoAtual').value;
+      const alvo = el('planoAlvo').value;
+      const placas = Number(el('placas').value);
+      const valorPlacaAtual = Number(el('valorPlacaAtual').value);
+      const valorPlacaAlvo = Number(el('valorPlacaAlvo').value);
+      const indicacoes = Number(el('indicacoes').value);
+      const pagamentos = Number(el('pagamentos').value);
+      const cnh = Number(el('cnh').value);
+
+      const calcAtual = calc(atual, placas, valorPlacaAtual, indicacoes, pagamentos, cnh);
+      const calcAlvo  = calc(alvo, placas, valorPlacaAlvo, indicacoes, pagamentos, cnh);
+
+      el('kpiAtual').textContent = BRL(calcAtual.total);
+      el('kpiAlvo').textContent = BRL(calcAlvo.total);
+      const delta = calcAlvo.total - calcAtual.total;
+      const deltaEl = el('kpiDelta');
+      deltaEl.textContent = BRL(delta);
+      deltaEl.className = 'value delta ' + (delta>=0 ? 'positive' : 'negative');
+
+      renderFeatures(atual, alvo);
+    });
+  </script>
+</body>
+</html>
